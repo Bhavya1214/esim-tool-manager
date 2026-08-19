@@ -1,0 +1,129 @@
+# eSim External Tool Definitions
+# Versioning follows SemVer. 'install_method' maps to logic in managers/installer.py
+
+tools:
+  ngspice:
+    name: "Ngspice"
+    description: "Open-source SPICE simulator for circuit simulation."
+    category: "simulation"
+    versions:
+      "42":
+        version: "42"
+        release_date: "2023-12-01"
+        linux:
+          install_method: "apt"
+          packages: ["ngspice"]
+          binary_name: "ngspice"
+          version_flag: "--version"
+          version_regex: "ngspice-(\\d+)"
+        windows:
+          install_method: "chocolatey"
+          packages: ["ngspice"]
+          binary_name: "ngspice.exe"
+          version_flag: "--version"
+          version_regex: "ngspice-(\\d+)"
+          manual_url: "https://sourceforge.net/projects/ngspice/files/ng-spice-rework/42/ngspice-42_64.zip"
+        dependencies: []
+      "40":
+        version: "40"
+        release_date: "2022-06-15"
+        linux:
+          install_method: "apt"
+          packages: ["ngspice"]
+        windows:
+          install_method: "chocolatey"
+          packages: ["ngspice"]
+    recommended_version: "42"
+
+  kicad:
+    name: "KiCad"
+    description: "Electronic Design Automation Suite (Schematic & PCB)."
+    category: "pcb"
+    versions:
+      "8.0":
+        version: "8.0"
+        release_date: "2024-02-15"
+        linux:
+          install_method: "apt"
+          packages: ["kicad"]
+          binary_name: "kicad"
+          version_flag: "--version"
+          version_regex: "(\\d+\\.\\d+\\.\\d+)"
+        windows:
+          install_method: "manual"
+          packages: [""]
+          binary_name: "kicad-cli"
+          version_flag: "--version"
+          version_regex: "([\\d.]+)"
+          manual_url: "https://github.com/KiCad/kicad-source-mirror/releases/download/8.0.0/kicad-8.0.0-x86_64.exe"
+        dependencies: []
+      "7.0":
+        version: "7.0"
+        release_date: "2022-10-15"
+        linux:
+          install_method: "apt"
+          packages: ["kicad"]
+        windows:
+          install_method: "winget"
+          packages: ["KiCad.KiCad"]
+    recommended_version: "8.0"
+
+  magic:
+    name: "Magic VLSI Layout Tool"
+    description: "VLSI Layout tool for extraction and DRC."
+    category: "layout"
+    versions:
+      "8.3":
+        version: "8.3"
+        release_date: "2023-01-10"
+        linux:
+          install_method: "apt"
+          packages: ["magic"]
+          binary_name: "magic"
+          version_flag: "-version"
+          version_regex: "version\\s+(\\d+\\.\\d+)"
+        windows:
+          install_method: "manual"
+          note: "Magic on Windows requires WSL or Cygwin. Not natively supported via winget/choco."
+          binary_name: "magic"
+        dependencies: ["tcsh", "libx11-dev"]
+    recommended_version: "8.3"
+
+  xschem:
+    name: "XSchem"
+    description: "Schematic capture for SPICE simulation."
+    category: "schematic"
+    versions:
+      "2.9":
+        version: "2.9"
+        release_date: "2023-05-20"
+        linux:
+          install_method: "compile"
+          build_deps: ["tcl-dev", "tk-dev", "libx11-dev", "libxrender-dev", "libxcb-util-dev", "flex", "bison", "git", "make", "gcc"]
+          source_url: "https://github.com/StefanSchippers/xschem.git"
+          build_commands: [
+            "./configure",
+            "make -j$(nproc)",
+            "sudo make install"
+          ]
+          binary_name: "xschem"
+          version_flag: "-v"
+          version_regex: "xschem version (\\d+\\.\\d+)"
+        windows:
+          install_method: "manual"
+          note: "Use WSL for XSchem on Windows."
+    recommended_version: "2.9"
+
+esim_integration:
+  env_vars:
+    - name: "ESIM_NGSPICE_PATH"
+      description: "Path to ngspice binary"
+    - name: "ESIM_KICAD_PATH"
+      description: "Path to kicad binary"
+    - name: "ESIM_MAGIC_PATH"
+      description: "Path to magic binary"
+    - name: "ESIM_XSCHEM_PATH"
+      description: "Path to xschem binary"
+
+  install_prefix: "/usr/local"
+
